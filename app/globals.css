@@ -1,8 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lato:wght@300;400&display=swap");
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Ilamaj brand tokens */
+  --il-brand: #664225;
+  --il-gold: #997545;
+  --il-cream: #f7f5ee;
+  --il-dark: #261b14;
+  --il-serif: "Cormorant Garamond", serif;
+  --il-sans: "Lato", sans-serif;
 }
 
 @theme inline {
@@ -23,4 +32,710 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ══════════════════════════════════════
+   Ilamaj – Product List
+══════════════════════════════════════ */
+
+* {
+  box-sizing: border-box;
+}
+
+.il-root {
+  font-family: var(--il-sans);
+  background: var(--il-cream);
+  min-height: 100vh;
+  color: var(--il-dark);
+}
+
+/* ── Hero ── */
+.il-hero {
+  text-align: center;
+  padding: 4rem 2rem 3.5rem;
+  border-bottom: 0.5px solid rgba(201, 160, 106, 0.28);
+}
+.il-eyebrow {
+  font-family: var(--il-sans);
+  font-size: 9px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--il-gold);
+  margin: 0 0 1.6rem;
+}
+.il-knot {
+  display: block;
+  margin: 0 auto 1.4rem;
+}
+.il-brand-name {
+  font-family: var(--il-serif);
+  font-size: clamp(38px, 6vw, 58px);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: var(--il-brand);
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+}
+.il-brand-sub {
+  font-family: var(--il-serif);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.48em;
+  color: var(--il-gold);
+  text-transform: uppercase;
+  margin: 8px 0 0;
+}
+.il-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 1.8rem auto;
+}
+.il-divider-line {
+  display: block;
+  width: 80px;
+  height: 0.5px;
+  background: var(--il-gold);
+  opacity: 0.45;
+}
+.il-divider-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border: 0.5px solid var(--il-gold);
+  border-radius: 50%;
+}
+.il-tagline {
+  font-family: var(--il-serif);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--il-brand);
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.75;
+  opacity: 0.88;
+}
+.il-hero-desc {
+  font-family: var(--il-sans);
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(139, 94, 47, 0.62);
+  max-width: 380px;
+  margin: 1rem auto 0;
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+}
+
+/* ── Search ── */
+.il-search-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 2.2rem 1.5rem 0;
+}
+.il-search {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 20px;
+  font-family: var(--il-sans);
+  font-size: 12px;
+  color: var(--il-dark);
+  background: rgba(201, 160, 106, 0.08);
+  border: 0.5px solid rgba(201, 160, 106, 0.42);
+  border-radius: 30px;
+  outline: none;
+  letter-spacing: 0.05em;
+  transition: border-color 0.2s;
+}
+.il-search:focus {
+  border-color: rgba(139, 94, 47, 0.5);
+}
+
+/* ── Category bar ── */
+.il-cats {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 1.6rem 1.5rem 0;
+}
+.il-cat {
+  font-family: var(--il-sans);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--il-brand);
+  border: 0.5px solid rgba(201, 160, 106, 0.48);
+  padding: 6px 16px;
+  cursor: pointer;
+  background: none;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s;
+}
+.il-cat:hover {
+  background: rgba(201, 160, 106, 0.14);
+}
+.il-cat-active {
+  background: var(--il-brand);
+  color: var(--il-cream);
+  border-color: var(--il-brand);
+}
+
+/* ── Section label ── */
+.il-section-label {
+  font-family: var(--il-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--il-gold);
+  text-align: center;
+  padding: 2.8rem 0 0.6rem;
+  margin: 0;
+}
+
+/* ── Grid ── */
+.il-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  background: rgba(201, 160, 106, 0.15);
+  margin: 0.8rem 1.5rem 0;
+  padding: 12px;
+  border-radius: 2px;
+}
+
+/* ── Card ── */
+.il-card {
+  background: var(--il-cream);
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s;
+}
+.il-card:hover {
+  background: #ede5d5;
+}
+.il-card-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+.il-card-placeholder {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #e8e0d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.il-card-body {
+  padding: 16px 16px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.il-card-cat {
+  font-size: 8px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--il-gold);
+  margin: 0 0 6px;
+  font-weight: 400;
+}
+.il-card-name {
+  font-family: var(--il-serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--il-dark);
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+.il-card-desc {
+  font-size: 11px;
+  color: rgba(139, 94, 47, 0.6);
+  line-height: 1.6;
+  margin: 0 0 12px;
+  flex: 1;
+  font-weight: 300;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.il-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 12px;
+  border-top: 0.5px solid rgba(201, 160, 106, 0.28);
+  margin-top: auto;
+}
+.il-card-size {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--il-gold);
+  text-transform: uppercase;
+}
+.il-card-price {
+  font-family: var(--il-serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--il-brand);
+}
+
+/* ── Empty / loading ── */
+.il-empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  font-family: var(--il-serif);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--il-gold);
+}
+
+/* ── Brand quote strip ── */
+.il-quote-strip {
+  text-align: center;
+  padding: 3.5rem 2rem;
+  margin-top: 1px;
+  background: rgba(201, 160, 106, 0.07);
+  border-top: 0.5px solid rgba(201, 160, 106, 0.22);
+}
+.il-quote {
+  font-family: var(--il-serif);
+  font-size: 19px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--il-brand);
+  line-height: 1.75;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.il-quote-attr {
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--il-gold);
+  margin-top: 1.2rem;
+}
+
+/* ── Footer ── */
+.il-footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-top: 0.5px solid rgba(201, 160, 106, 0.22);
+}
+.il-footer p {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(139, 94, 47, 0.85);
+  text-transform: uppercase;
+}
+
+/* Admin get items design */
+.il-admin-float-wrap {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  z-index: 90;
+}
+
+.il-admin-add-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--il-brand);
+  color: var(--il-cream);
+  border: 1px solid var(--il-brand);
+  font-family: var(--il-sans);
+  font-size: 24px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(38, 27, 20, 0.16);
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s;
+}
+
+.il-admin-add-btn:hover {
+  background: var(--il-dark);
+  transform: scale(1.06);
+}
+
+.il-admin-add-btn:active {
+  transform: scale(0.96);
+}
+
+/* Create Item page */
+.il-form-container {
+  width: 100%;
+  max-width: 620px;
+  margin: 2rem auto 0 auto;
+  padding: 0 1rem;
+}
+
+.il-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+}
+
+.il-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.il-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 500px) {
+  .il-field-row {
+    grid-template-columns: 1fr;
+    gap: 2.2rem;
+  }
+}
+
+/* ── Typography & Input Labels ── */
+.il-label {
+  font-family: var(--il-sans, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--il-gold, #997545);
+}
+
+/* ── Minimal Editorial Form Inputs ── */
+.il-input,
+.il-select,
+.il-textarea {
+  width: 100%;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(139, 94, 47, 0.25) !important;
+  border-radius: 0 !important;
+  padding: 0.6rem 0 !important;
+  font-family: var(--il-serif, serif);
+  font-size: 15px;
+  color: var(--il-dark, #261b14);
+  outline: none !important;
+  transition: border-color 0.25s ease;
+}
+
+.il-textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.il-input:focus,
+.il-select:focus,
+.il-textarea:focus {
+  border-bottom-color: var(--il-brand, #664225) !important;
+}
+
+/* Placeholder adjustments */
+.il-input::placeholder,
+.il-textarea::placeholder {
+  color: #bfaea0;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* Dropdown native cleaning adjustments */
+.il-select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.il-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.il-select-wrapper::after {
+  content: "↓";
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--il-gold, #997545);
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ── Action Navigation Control Buttons ── */
+.il-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 2rem;
+  border-top: 1px dashed rgba(139, 94, 47, 0.15);
+}
+
+.il-btn-secondary {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--il-sans, sans-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9c8e83;
+  transition: color 0.2s ease;
+}
+
+.il-btn-secondary:hover {
+  color: var(--il-dark, #261b14);
+}
+
+.il-btn-primary {
+  background: var(--il-brand, #664225);
+  border: 1px solid var(--il-brand, #664225);
+  color: var(--il-cream, #fdfbf7);
+  font-family: var(--il-sans, sans-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  transition:
+    background-color 0.25s,
+    border-color 0.25s,
+    opacity 0.2s;
+}
+
+.il-btn-primary:hover {
+  background: var(--il-dark, #261b14);
+  border-color: var(--il-dark, #261b14);
+}
+
+.il-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/*  */
+/* ══════════════════════════════════════
+   Ilamaj – Detail Split Layout Layout
+══════════════════════════════════════ */
+
+.il-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.il-detail-media {
+  width: 100%;
+}
+
+.il-detail-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.il-detail-placeholder {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: rgba(139, 94, 47, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.il-detail-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.il-detail-header {
+  border-bottom: 0.5px solid rgba(139, 94, 47, 0.2);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.il-detail-eyebrow {
+  font-family: var(--il-sans);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #a39589;
+  margin: 0 0 0.5rem 0;
+}
+
+.il-detail-cat {
+  font-family: var(--il-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--il-gold);
+  margin: 0 0 0.75rem 0;
+}
+
+.il-detail-title {
+  font-family: var(--il-serif);
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 400;
+  color: var(--il-dark);
+  line-height: 1.2;
+  margin: 0 0 1rem 0;
+}
+
+.il-detail-price {
+  font-family: var(--il-serif);
+  font-size: 22px;
+  color: var(--il-brand);
+  margin: 0;
+}
+
+.il-detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.il-detail-section-title {
+  font-family: var(--il-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--il-dark);
+  margin: 0;
+}
+
+.il-detail-desc {
+  font-family: var(--il-serif);
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4a3e35;
+  margin: 0;
+}
+
+.il-detail-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 0.5px dashed rgba(139, 94, 47, 0.15);
+}
+
+.il-detail-meta-label {
+  font-family: var(--il-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8c7e73;
+}
+
+.il-detail-meta-value {
+  font-family: var(--il-serif);
+  font-size: 15px;
+  color: var(--il-dark);
+}
+
+/* Responsive adjustment for tight viewport widths */
+@media (max-width: 800px) {
+  .il-detail-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* get one item - admin */
+/* ── Administrative Detail Controls ── */
+.il-admin-actions {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px dashed rgba(139, 94, 47, 0.15);
+}
+
+.il-btn-admin-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--il-brand, #664225);
+  border: 1px solid var(--il-brand, #664225);
+  color: var(--il-cream, #fdfbf7);
+  font-family: var(--il-sans, sans-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 1.1rem 2rem;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.il-btn-admin-edit:hover {
+  background: var(--il-dark, #261b14);
+  border-color: var(--il-dark, #261b14);
+}
+
+/* Status Flag Modifiers */
+.il-status-active {
+  color: #556b2f !important;
+  font-weight: 500;
+}
+
+.il-status-inactive {
+  color: #8b0000 !important;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .il-grid {
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0.8rem 0.75rem 0;
+    padding: 8px;
+    gap: 8px;
+  }
+  .il-hero {
+    padding: 3rem 1.5rem 2.5rem;
+  }
+  /* Responsive for admin get items page */
+  .il-admin-float-wrap {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+  .il-admin-add-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
 }
