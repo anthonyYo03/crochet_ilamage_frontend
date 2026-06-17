@@ -49,19 +49,19 @@ export default async function ProductDetailPage({ params }: Props) {
       </div>
 
       <main className={styles['il-detail-container']}>
-        {/* Left Side: Visual Frame */}
-        <div className={styles['il-detail-visual']}>
+        {/* Left Side: Visual Frame (Matched exactly to Admin layout structures) */}
+        <div className="il-detail-media">
           {product.image_url ? (
             <img
               src={product.image_url}
               alt={product.name}
-              className={styles['il-detail-img']}
+              className="il-detail-img"
             />
           ) : (
-            <div className={styles['il-detail-placeholder']}>
-              <svg width="48" height="32" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ opacity: 0.22 }}>
-                <path d="M4 16 C7 7 14 5 19 10 C22 13 21 19 24 19 C27 19 26 13 29 10 C34 5 41 7 44 16" stroke="#8B5E2F" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M4 16 C7 25 14 27 19 22 C22 19 21 13 24 13 C27 13 26 19 29 22 C34 27 41 25 44 16" stroke="#8B5E2F" strokeWidth="1.8" strokeLinecap="round" />
+            <div className="il-detail-placeholder">
+              <svg width="64" height="64" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ opacity: 0.15 }}>
+                <path d="M4 16 C7 7 14 5 19 10 C22 13 21 19 24 19 C27 19 26 13 29 10 C34 5 41 7 44 16" stroke="#8B5E2F" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M4 16 C7 25 14 27 19 22 C22 19 21 13 24 13 C27 13 26 19 29 22 C34 27 41 25 44 16" stroke="#8B5E2F" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </div>
           )}
