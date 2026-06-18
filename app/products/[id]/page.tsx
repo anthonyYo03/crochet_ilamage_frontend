@@ -38,7 +38,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
   // ── DESIGN WHATSAPP LINK ──
   // Replace with your actual WhatsApp phone number (include your country code, no "+" or spaces)
-  const phoneNumber = "96171028586"; 
+  const phoneNumber = "96176797021";
   const shareMessage = `Hi! I would like to order the ${product.name}.`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(shareMessage)}`;
 

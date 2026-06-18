@@ -72,7 +72,8 @@ export default function ProductListPage() {
     "Table Runners",
     "Bags",
     "Baby Shower Collection",
-    "Kitchen Collection",
+    "Keychain Collection",
+    "Christmas Collection",
   ];
 
   const uniqueCategories = Array.from(

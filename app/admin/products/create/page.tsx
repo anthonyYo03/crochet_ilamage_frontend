@@ -175,7 +175,8 @@ export default function CreateProduct() {
                 <option value="Table Runners">Table Runners</option>
                 <option value="Bags">Bags</option>
                 <option value="Baby Shower Collection">Baby Shower Collection</option>
-                <option value="Kitchen Collection">Kitchen Collection</option>
+                <option value="Keychain Collection">Keychain Collection</option>
+                <option value="Christmas Collection">Christmas Collection</option>
               </select>
             </div>
           </div>

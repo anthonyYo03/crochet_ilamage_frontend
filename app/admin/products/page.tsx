@@ -77,7 +77,7 @@ export default function ProductListPage() {
     setFilteredProducts(result);
   }, [selectedCategory, searchTerm, products]);
 
-  const staticCategories = ["Table Runners", "Bags", "Baby Shower Collection", "Kitchen Collection"];
+  const staticCategories = ["Table Runners", "Bags", "Baby Shower Collection","Keychain Collection", "Christmas Collection"];
   
   const uniqueCategories = Array.from(
     new Set([
