@@ -15,11 +15,10 @@ interface Product {
   category: string;
   description: string;
   price: number;
-  // ── SWAPPED 'size' WITH HEIGHT AND WIDTH ──
   height: number;
   width: number;
   image_url: string;
-  images?: ProductImageItem[]; // ── ADDED: getAll already returns this, we just weren't using it ──
+  images?: ProductImageItem[];
   is_active: boolean;
   user_id: number;
 }
@@ -38,13 +37,26 @@ export default function ProductListPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const PAGE_LIMIT = 20;
+
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
+        // ── category is now sent to the backend so filtering happens at the DB level,
+        // otherwise only whatever products are on the current page get filtered client-side ──
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(PAGE_LIMIT),
+        });
+        if (selectedCategory) params.set("category", selectedCategory);
+
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/products/getAll`,
+          `${process.env.NEXT_PUBLIC_API_URL}/products/getAll?${params.toString()}`,
           {
-            cache: 'no-store', // ── this is a client-side fetch; 'next.revalidate' was a no-op here ──
+            cache: 'no-store',
           }
         );
 
@@ -55,6 +67,7 @@ export default function ProductListPage() {
         const data: ApiResponse = await response.json();
         setProducts(data.products || []);
         setFilteredProducts(data.products || []);
+        setTotalPages(data.totalPages || 1);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -63,14 +76,12 @@ export default function ProductListPage() {
     };
 
     fetchProducts();
-  }, []);
+  }, [page, selectedCategory]);
 
   useEffect(() => {
+    // ── category filtering is now handled server-side (see fetch above),
+    // so this effect only applies the text search on top of the fetched page ──
     let result = products;
-
-    if (selectedCategory) {
-      result = result.filter((product) => product.category === selectedCategory);
-    }
 
     if (searchTerm.trim() !== "") {
       const lowerSearchTerm = searchTerm.toLowerCase();
@@ -82,10 +93,14 @@ export default function ProductListPage() {
     }
 
     setFilteredProducts(result);
-  }, [selectedCategory, searchTerm, products]);
+  }, [searchTerm, products]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [selectedCategory, searchTerm]);
 
   const staticCategories = ["Table Runners", "Bags", "Baby Shower Collection","Keychain Collection", "Christmas Collection"];
-  
+ 
   const uniqueCategories = Array.from(
     new Set([
       ...staticCategories,
@@ -150,12 +165,11 @@ export default function ProductListPage() {
       ) : (
         <div className="il-grid">
           {filteredProducts.map((product) => {
-            // ── PREFER THE FRESH 'images' RELATION, FALL BACK TO LEGACY 'image_url' ──
             const coverImage = product.images?.[0]?.image_url || product.image_url;
 
             return (
-              <Link 
-                key={product.product_id} 
+              <Link
+                key={product.product_id}
                 href={`/admin/products/${product.product_id}`}
                 className="il-card"
               >
@@ -174,7 +188,6 @@ export default function ProductListPage() {
                   <h2 className="il-card-name">{product.name}</h2>
                   <p className="il-card-desc">{product.description}</p>
                   <div className="il-card-footer">
-                    {/* ── RENDERED HEIGHT AND WIDTH INSTEAD OF SIZE ── */}
                     <span className="il-card-size">
                       {product.height} cm x {product.width} cm
                     </span>
@@ -185,6 +198,33 @@ export default function ProductListPage() {
             );
           })}
         </div>
+      )}
+
+      {/* ── PAGINATION CONTROLS (hidden during active text search, since search is still client-side on the current page) ── */}
+      {!searchTerm && totalPages > 1 && (
+        <nav className="il-pagination" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '2.5rem' }}>
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="il-cat"
+            style={{ opacity: page === 1 ? 0.4 : 1, cursor: page === 1 ? 'not-allowed' : 'pointer' }}
+          >
+            Previous
+          </button>
+          <span className="il-section-label" style={{ margin: 0 }}>
+            Page {page} of {totalPages}
+          </span>
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="il-cat"
+            style={{ opacity: page === totalPages ? 0.4 : 1, cursor: page === totalPages ? 'not-allowed' : 'pointer' }}
+          >
+            Next
+          </button>
+        </nav>
       )}
 
       {/* ── FLOATING ACTION CREATION ENTRY BUTTON ── */}
