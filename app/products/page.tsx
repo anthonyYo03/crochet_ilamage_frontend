@@ -4,6 +4,12 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import ilamaj from "../image/ilmagePP.png";
 
+interface ProductImageItem {
+  image_id: number;
+  image_url: string;
+  position: number;
+}
+
 interface Product {
   product_id: number;
   name: string;
@@ -14,6 +20,7 @@ interface Product {
   height: number;
   width: number;
   image_url: string;
+  images?: ProductImageItem[]; // ── ADDED: getAll already returns this, we just weren't using it ──
   is_active: boolean;
   user_id: number;
 }
@@ -37,7 +44,7 @@ export default function ProductListPage() {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/products/getAll`,
-          { next: { revalidate: 60 } }
+          { cache: "no-store" } // ── this is a client-side fetch; 'next.revalidate' was a no-op here ──
         );
         if (!response.ok) throw new Error("Failed to fetch products");
         const data: ApiResponse = await response.json();
@@ -158,33 +165,38 @@ export default function ProductListPage() {
         <p className="il-empty">No pieces found matching your search.</p>
       ) : (
         <div className="il-grid">
-          {filteredProducts.map((product) => (
-            <Link
-              key={product.product_id}
-              href={`/products/${product.product_id}`}
-              className="il-card"
-            >
-              {product.image_url ? (
-                <img src={product.image_url} alt={product.name} className="il-card-img" />
-              ) : (
-                <div className="il-card-placeholder">
-                  <KnotPlaceholder />
+          {filteredProducts.map((product) => {
+            // ── PREFER THE FRESH 'images' RELATION, FALL BACK TO LEGACY 'image_url' ──
+            const coverImage = product.images?.[0]?.image_url || product.image_url;
+
+            return (
+              <Link
+                key={product.product_id}
+                href={`/products/${product.product_id}`}
+                className="il-card"
+              >
+                {coverImage ? (
+                  <img src={coverImage} alt={product.name} className="il-card-img" />
+                ) : (
+                  <div className="il-card-placeholder">
+                    <KnotPlaceholder />
+                  </div>
+                )}
+                <div className="il-card-body">
+                  <p className="il-card-cat">{product.category}</p>
+                  <p className="il-card-name">{product.name}</p>
+                  <p className="il-card-desc">{product.description}</p>
+                  <div className="il-card-footer">
+                 
+                    <span className="il-card-size">
+                      {product.height} cm x {product.width} cm
+                    </span>
+                    <span className="il-card-price">${Number(product.price).toFixed(2)}</span>
+                  </div>
                 </div>
-              )}
-              <div className="il-card-body">
-                <p className="il-card-cat">{product.category}</p>
-                <p className="il-card-name">{product.name}</p>
-                <p className="il-card-desc">{product.description}</p>
-                <div className="il-card-footer">
-               
-                  <span className="il-card-size">
-                    {product.height} cm x {product.width} cm
-                  </span>
-                  <span className="il-card-price">${Number(product.price).toFixed(2)}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
 
