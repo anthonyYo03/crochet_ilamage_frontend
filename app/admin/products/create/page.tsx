@@ -14,7 +14,12 @@ interface NewProductCreation {
   // ── SWAPPED 'size' WITH HEIGHT AND WIDTH ──
   height: number;
   width: number;
-  image_url: string;
+}
+
+interface SelectedImage {
+  id: string;
+  file: File;
+  previewUrl: string;
 }
 
 export default function CreateProduct() {
@@ -26,11 +31,11 @@ export default function CreateProduct() {
     price: 0,
     height: 0,
     width: 0,
-    image_url: '',
   });
   
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // Track local upload file
+  // ── SUPPORTS MULTIPLE SELECTED IMAGE FILES INSTEAD OF A SINGLE FILE ──
+  const [selectedImages, setSelectedImages] = useState<SelectedImage[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -42,11 +47,28 @@ export default function CreateProduct() {
     });
   };
 
-  // Track the raw image file when chosen
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
+  // Append newly chosen files to the running list of images to upload
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    const newFiles = Array.from(e.target.files).map((file) => ({
+      id: `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+
+    setSelectedImages((prev) => [...prev, ...newFiles]);
+
+    // Reset the input so the same file can be re-selected later if removed
+    e.target.value = '';
+  };
+
+  const handleRemoveSelectedImage = (id: string) => {
+    setSelectedImages((prev) => {
+      const target = prev.find((img) => img.id === id);
+      if (target) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((img) => img.id !== id);
+    });
   };
 
   const backButton = () => {
@@ -61,46 +83,47 @@ export default function CreateProduct() {
       return;
     }
 
-    // Enforce that an image asset file must be provided for a new product entry
-    if (!selectedFile) {
-      toast.error('Please upload a product presentation image');
+    // Enforce that at least one image must be provided for a new product entry
+    if (selectedImages.length === 0) {
+      toast.error('Please upload at least one product presentation image');
       return;
     }
 
     setLoading(true);
 
     try {
-      let finalImageUrl = '';
+      // 1. Upload every selected file to Supabase Storage and collect the public URLs
+      const uploadedUrls: string[] = [];
 
-      // 1. Process the binary file and upload it to Supabase Storage
-      const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
-      const filePath = `uploads/${fileName}`;
+      for (const { file } of selectedImages) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+        const filePath = `uploads/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('product-images')
-        .upload(filePath, selectedFile);
+        const { error: uploadError } = await supabase.storage
+          .from('product-images')
+          .upload(filePath, file);
 
-      if (uploadError) throw new Error(`Supabase upload failed: ${uploadError.message}`);
+        if (uploadError) throw new Error(`Supabase upload failed: ${uploadError.message}`);
 
-      // 2. Gather the generated absolute public URL asset string
-      const { data } = supabase.storage.from('product-images').getPublicUrl(filePath);
-      finalImageUrl = data.publicUrl;
+        const { data } = supabase.storage.from('product-images').getPublicUrl(filePath);
+        uploadedUrls.push(data.publicUrl);
+      }
 
-      // 3. Construct payload replacing placeholder image_url with your public storage link
-      const payloadWithUploadedImage = {
+      // 2. Construct payload with the full ordered list of uploaded image URLs
+      const payloadWithUploadedImages = {
         ...newProduct,
-        image_url: finalImageUrl,
+        images: uploadedUrls,
       };
 
-      // 4. Fire network payload away to your standard Node backend API
+      // 3. Fire network payload away to your standard Node backend API
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(payloadWithUploadedImage),
+        body: JSON.stringify(payloadWithUploadedImages),
       });
 
       if (!response.ok) throw new Error('Failed to create product record');
@@ -115,9 +138,9 @@ export default function CreateProduct() {
         price: 0,
         height: 0,
         width: 0,
-        image_url: '',
-      }); 
-      setSelectedFile(null);
+      });
+      selectedImages.forEach((img) => URL.revokeObjectURL(img.previewUrl));
+      setSelectedImages([]);
       route.push('/admin/products');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred';
@@ -228,17 +251,73 @@ export default function CreateProduct() {
             </div>
           </div>
 
-          {/* Product Presentation Image */}
+          {/* Product Presentation Images ── NOW SUPPORTS MULTIPLE FILES ── */}
           <div className="il-field">
-            <label className="il-label">Product Presentation Image</label>
+            <label className="il-label">Product Presentation Images</label>
             <input
               type="file"
               accept="image/*"
+              multiple
               className="il-input"
               style={{ padding: '0.4rem 0' }}
-              onChange={handleFileChange}
-              required
+              onChange={handleFilesChange}
             />
+
+            {selectedImages.length > 0 && (
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem',
+                  marginTop: '0.75rem',
+                }}
+              >
+                {selectedImages.map((img, index) => (
+                  <div
+                    key={img.id}
+                    style={{
+                      position: 'relative',
+                      width: '84px',
+                      height: '84px',
+                      borderRadius: '6px',
+                      overflow: 'hidden',
+                      border: index === 0 ? '2px solid var(--il-gold, #8B5E2F)' : '1px solid #ddd',
+                    }}
+                  >
+                    <img
+                      src={img.previewUrl}
+                      alt={`Selected preview ${index + 1}`}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSelectedImage(img.id)}
+                      aria-label="Remove image"
+                      style={{
+                        position: 'absolute',
+                        top: '2px',
+                        right: '2px',
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        border: 'none',
+                        background: 'rgba(0,0,0,0.65)',
+                        color: '#fff',
+                        fontSize: '12px',
+                        lineHeight: '20px',
+                        cursor: 'pointer',
+                        padding: 0,
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p style={{ fontSize: '11px', opacity: 0.6, marginTop: '0.5rem' }}>
+              The first image will be used as the main product thumbnail.
+            </p>
           </div>
 
           {/* Extended Description */}

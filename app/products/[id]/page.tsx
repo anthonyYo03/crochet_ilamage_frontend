@@ -1,6 +1,13 @@
 import { notFound } from 'next/navigation';
 import BackButton from '@/component/BackButton';
+import ProductCarousel from '@/component/ProductCarousel';
 import styles from './page.module.css';
+
+interface ProductImageItem {
+  image_id: number;
+  image_url: string;
+  position: number;
+}
 
 interface Product {
   product_id: number;
@@ -11,7 +18,9 @@ interface Product {
   // ── SWAPPED 'size' WITH HEIGHT AND WIDTH ──
   height: number;
   width: number;
-  image_url: string;
+  image_url?: string;
+  // ── ADDED MULTIPLE IMAGES SUPPORT ──
+  images?: ProductImageItem[];
   is_active: boolean;
   user_id: number;
 }
@@ -49,22 +58,13 @@ export default async function ProductDetailPage({ params }: Props) {
       </div>
 
       <main className={styles['il-detail-container']}>
-        {/* Left Side: Visual Frame (Matched exactly to Admin layout structures) */}
+        {/* Left Side: Visual Frame ── NOW A BOOTSTRAP CAROUSEL ── */}
         <div className="il-detail-media">
-          {product.image_url ? (
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="il-detail-img"
-            />
-          ) : (
-            <div className="il-detail-placeholder">
-              <svg width="64" height="64" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ opacity: 0.15 }}>
-                <path d="M4 16 C7 7 14 5 19 10 C22 13 21 19 24 19 C27 19 26 13 29 10 C34 5 41 7 44 16" stroke="#8B5E2F" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M4 16 C7 25 14 27 19 22 C22 19 21 13 24 13 C27 13 26 19 29 22 C34 27 41 25 44 16" stroke="#8B5E2F" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
-          )}
+          <ProductCarousel
+            images={product.images}
+            fallbackImageUrl={product.image_url}
+            altText={product.name}
+          />
         </div>
 
         {/* Right Side: Editorial Content Info */}
